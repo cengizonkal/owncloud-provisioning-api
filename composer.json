@@ -1,0 +1,23 @@
+{
+    "name": "conkal/owncloud-provisioning-api",
+    "description": "owncloud provisioning api wrapper",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Conkal\\OwncloudProvisioningApi\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "cengiz",
+            "email": "onkal.cengiz@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.5.9",
+        "guzzlehttp/guzzle": "^6.5",
+        "ext-json": "*",
+        "phpunit/phpunit": "^5.7"
+    }
+}
