@@ -9,21 +9,11 @@ use http\Client;
 
 class Users extends Resource
 {
-    /**
-     * @var Owncloud
-     */
-    private $client;
     private $endpoint = 'owncloud/ocs/v1.php/cloud/users';
-
-    public function __construct(OwncloudClient $client)
-    {
-        $this->client = $client;
-    }
-
 
     public function find($id)
     {
-        $response = $this->client->request('GET', $this->endpoint.'/'.$id);
+        $response = $this->client->request('GET', $this->endpoint . '/' . $id);
         $response = json_decode($response->getBody()->getContents());
         $user = new User();
         $user->enabled = $response->ocs->data->enabled;
@@ -50,7 +40,7 @@ class Users extends Resource
 
     public function update($user, $key, $value)
     {
-        return $this->client->request('PUT', $this->endpoint.'/'.$user, [
+        return $this->client->request('PUT', $this->endpoint . '/' . $user, [
             'form_params' => [
                 'key' => $key,
                 'value' => $value
@@ -68,7 +58,6 @@ class Users extends Resource
             ]
         ]);
     }
-
 
     public function setEndPoint($endpoint)
     {
