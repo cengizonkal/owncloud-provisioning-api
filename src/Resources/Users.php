@@ -59,6 +59,11 @@ class Users extends Resource
         ]);
     }
 
+    public function delete($user)
+    {
+        return $this->client->request('DELETE', $this->endpoint . '/' . $user);
+    }
+
     public function setEndPoint($endpoint)
     {
         $this->endpoint = $endpoint;
