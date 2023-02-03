@@ -9,13 +9,17 @@ class Owncloud
 
     private $owncloudClient;
 
-    public function __construct($host, $username, $password, ClientInterface $client)
+    public function __construct($host, $username, $password)
     {
         $this->owncloudClient = new OwncloudClient([
             'base_uri' => $host,
             'auth' => [$username, $password],
             'headers' => [
-                'OCS-APIRequest' => 'true'
+                'OCS-APIRequest' => 'true',
+                'Content-Type' => 'application/json'
+            ],
+            'query' => [
+                'format' => 'json'
             ]
         ]);
     }
@@ -25,4 +29,7 @@ class Owncloud
     {
         return new Resources\Users($this->owncloudClient);
     }
+
+
+
 }

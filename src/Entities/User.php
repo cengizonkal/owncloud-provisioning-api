@@ -2,7 +2,7 @@
 
 namespace Conkal\OwncloudProvisioningApi\Entities;
 
-class User
+class User extends Entity
 {
     public $id;
     public $enabled;
@@ -10,5 +10,6 @@ class User
     public $email;
     public $displayname;
     public $home;
+
 
 }
