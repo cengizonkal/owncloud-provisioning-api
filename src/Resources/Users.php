@@ -14,19 +14,13 @@ class Users extends Resource
     public function find($id)
     {
         $response = $this->client->request('GET', $this->endpoint . '/' . $id);
-        $response = json_decode($response->getBody()->getContents());
-        $user = new User();
-        $user->enabled = $response->ocs->data->enabled;
-        $user->quota = $response->ocs->data->quota;
-        $user->email = $response->ocs->data->email;
-        $user->displayname = $response->ocs->data->displayname;
-        $user->id = $response->ocs->data->displayname;
-        return $user;
+        $response = json_decode($response->getBody()->getContents(),true);
+        return (new User())->fill($response['ocs']['data']);
     }
 
     public function get()
     {
-        $response = $this->client->get($this->endpoint);
+        $response = $this->client->request('GET', $this->endpoint);
         $json = json_decode($response->getBody()->getContents());
         $users = [];
         foreach ($json->ocs->data->users as $userName) {
