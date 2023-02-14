@@ -30,6 +30,11 @@ class Owncloud
         return new Resources\Users($this->owncloudClient);
     }
 
+    public function groups()
+    {
+        return new Resources\Groups($this->owncloudClient);
+    }
+
 
 
 }

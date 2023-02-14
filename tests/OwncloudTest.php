@@ -41,4 +41,44 @@ class OwncloudTest extends TestCase
         $response->getBody()->getContents();
         $this->assertTrue($response->getStatusCode() == 200);
     }
+
+    public function testDisableUser()
+    {
+        $response = $this->owncloud->users()->disable('anil');
+        $this->assertTrue($response->getStatusCode() == 200);
+    }
+
+    public function testEnableUser()
+    {
+        $response = $this->owncloud->users()->enable('anil');
+        $this->assertTrue($response->getStatusCode() == 200);
+    }
+
+    public function testGetUserGroups()
+    {
+        $groups = $this->owncloud->users()->groups('anil');
+        $this->assertTrue(is_array($groups));
+
+    }
+
+    public function testAddUserToGroup()
+    {
+        $response = $this->owncloud->users()->addGroup('anil', 'test');
+        $this->assertTrue($response->getStatusCode() == 200);
+    }
+
+
+    public function testCreateGroup()
+    {
+        $response = $this->owncloud->groups()->create('test');
+        $this->assertTrue($response->getStatusCode() == 200);
+    }
+
+    public function testGetGroup()
+    {
+        $group = $this->owncloud->groups()->get('test');
+        $this->assertEquals('test', $group->id);
+    }
+
+
 }

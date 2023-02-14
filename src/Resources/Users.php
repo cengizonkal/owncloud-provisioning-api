@@ -69,10 +69,51 @@ class Users extends Resource
         ]);
     }
 
+    public function add($user, $password, $groups)
+    {
+        $this->create($user, $password, $groups);
+    }
+
 
     public function setEndPoint($endpoint)
     {
         $this->endpoint = $endpoint;
+    }
+
+    public function enable($user)
+    {
+        return $this->client->request('PUT', $this->endpoint.'/'.$user.'/enable');
+    }
+
+    public function disable($user)
+    {
+        return $this->client->request('PUT', $this->endpoint.'/'.$user.'/disable');
+    }
+
+    public function delete($user)
+    {
+        return $this->client->request('DELETE', $this->endpoint.'/'.$user);
+    }
+
+    /**
+     * @param $user
+     * @return array
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function groups($user)
+    {
+        $response = json_decode($this->client->request('GET', $this->endpoint.'/'.$user.'/groups')->getBody(), true);
+        return $response['ocs']['data']['groups'];
+    }
+
+    public function addGroup($user, $group)
+    {
+        return $this->client->request('POST', $this->endpoint.'/'.$user.'/groups', [
+            'form_params' => [
+                'groupid' => $group,
+                'userid' => $user
+            ]
+        ]);
     }
 
 
