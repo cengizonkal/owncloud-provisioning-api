@@ -3,9 +3,7 @@
 namespace Conkal\OwncloudProvisioningApi\Resources;
 
 use Conkal\OwncloudProvisioningApi\Entities\User;
-use Conkal\OwncloudProvisioningApi\Owncloud;
-use Conkal\OwncloudProvisioningApi\OwncloudClient;
-use http\Client;
+
 
 class Users extends Resource
 {
@@ -13,8 +11,8 @@ class Users extends Resource
 
     public function find($id)
     {
-        $response = $this->client->request('GET', $this->endpoint . '/' . $id);
-        $response = json_decode($response->getBody()->getContents(),true);
+        $response = $this->client->request('GET', $this->endpoint.'/'.$id);
+        $response = json_decode($response->getBody()->getContents(), true);
         $user = new User();
         $user->id = $id;
         return $user->fill($response['ocs']['data']);
@@ -36,7 +34,7 @@ class Users extends Resource
 
     public function update($user, $key, $value)
     {
-        return $this->client->request('PUT', $this->endpoint . '/' . $user, [
+        return $this->client->request('PUT', $this->endpoint.'/'.$user, [
             'form_params' => [
                 'key' => $key,
                 'value' => $value
@@ -57,8 +55,9 @@ class Users extends Resource
 
     public function delete($user)
     {
-        return $this->client->request('DELETE', $this->endpoint . '/' . $user);
+        return $this->client->request('DELETE', $this->endpoint.'/'.$user);
     }
+
     public function add($user, $password, $groups)
     {
         return $this->create($user, $password, $groups);

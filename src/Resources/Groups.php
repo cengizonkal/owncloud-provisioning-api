@@ -3,9 +3,6 @@
 namespace Conkal\OwncloudProvisioningApi\Resources;
 
 use Conkal\OwncloudProvisioningApi\Entities\Group;
-use Conkal\OwncloudProvisioningApi\Owncloud;
-use Conkal\OwncloudProvisioningApi\OwncloudClient;
-
 
 class Groups extends Resource
 {
