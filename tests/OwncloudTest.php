@@ -28,6 +28,12 @@ class OwncloudTest extends TestCase
         $this->assertNotEmpty($users);
     }
 
+    public function testAddUser()
+    {
+        $response = $this->owncloud->users()->add('anil', '123456','test');
+        $this->assertTrue($response->getStatusCode() == 200);
+    }
+
     public function testFindUser()
     {
         $user = $this->owncloud->users()->find('anil');

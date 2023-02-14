@@ -15,7 +15,9 @@ class Users extends Resource
     {
         $response = $this->client->request('GET', $this->endpoint . '/' . $id);
         $response = json_decode($response->getBody()->getContents(),true);
-        return (new User())->fill($response['ocs']['data']);
+        $user = new User();
+        $user->id = $id;
+        return $user->fill($response['ocs']['data']);
     }
 
     public function get()
@@ -59,7 +61,7 @@ class Users extends Resource
     }
     public function add($user, $password, $groups)
     {
-        $this->create($user, $password, $groups);
+        return $this->create($user, $password, $groups);
     }
 
 
@@ -76,11 +78,6 @@ class Users extends Resource
     public function disable($user)
     {
         return $this->client->request('PUT', $this->endpoint.'/'.$user.'/disable');
-    }
-
-    public function delete($user)
-    {
-        return $this->client->request('DELETE', $this->endpoint.'/'.$user);
     }
 
     /**

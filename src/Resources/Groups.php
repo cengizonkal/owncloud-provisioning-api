@@ -9,16 +9,8 @@ use Conkal\OwncloudProvisioningApi\OwncloudClient;
 
 class Groups extends Resource
 {
-    /**
-     * @var Owncloud
-     */
-    private $client;
-    private $endpoint = 'owncloud/ocs/v1.php/cloud/groups';
 
-    public function __construct(OwncloudClient $client)
-    {
-        $this->client = $client;
-    }
+    private $endpoint = 'owncloud/ocs/v1.php/cloud/groups';
 
     public function add($groupId)
     {
