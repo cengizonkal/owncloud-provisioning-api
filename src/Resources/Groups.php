@@ -11,7 +11,7 @@ class Groups extends Resource
 
     public function add($groupId)
     {
-        return $this->client->request('POST', $this->endpoint, [
+        return $this->request('POST', $this->endpoint, [
             'form_params' => [
                 'groupid' => $groupId
             ]
@@ -25,8 +25,7 @@ class Groups extends Resource
 
     private function find($groupId)
     {
-        $response = $this->client->request('GET', $this->endpoint.'/'.$groupId);
-        $response = json_decode($response->getBody()->getContents(), true);
+        $response = $this->request('GET', $this->endpoint.'/'.$groupId);
         $group = new Group();
         $group->id = $groupId;
         $group->displayname = $groupId;
@@ -39,10 +38,9 @@ class Groups extends Resource
         if ($groupId) {
             return $this->find($groupId);
         }
-        $response = $this->client->get($this->endpoint);
-        $json = json_decode($response->getBody()->getContents(), true);
+        $response = $this->request('GET', $this->endpoint);
         $groups = [];
-        foreach ($json['ocs']['data']['groups'] as $groupName) {
+        foreach ($response['ocs']['data']['groups'] as $groupName) {
             $group = new Group();
             $group->id = $groupName;
             $group->displayname = $groupName;
@@ -53,7 +51,7 @@ class Groups extends Resource
 
     public function delete($groupId)
     {
-        return $this->client->request('DELETE', $this->endpoint.'/'.$groupId);
+        return $this->request('DELETE', $this->endpoint.'/'.$groupId);
     }
 
 
