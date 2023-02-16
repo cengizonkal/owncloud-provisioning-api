@@ -1,6 +1,6 @@
 # Owncloud Provisioning API Wrapper
 
-A PHP wrapper for the Owncloud Provisioning API.
+This is a PHP library for interacting with the OwnCloud Provisioning API. It provides a simple and convenient way to manage users and groups within an OwnCloud instance.
 
 ## Installation
 
@@ -23,10 +23,17 @@ use Conkal\OwncloudProvisioningApi\Owncloud;
 
 $owncloud = new Owncloud('http://example.com/ocs/v1.php/cloud', 'admin', 'secret');
 ```
-You can then use the wrapper to interact with the Owncloud Provisioning API.
+Once you have an Owncloud instance, you can use it to manage users and groups.
+
+
+### Listing Users
+
+```php
+$users = $owncloud->users()->get();
+```
 
 ### Creating a User
-    
+
 ```php
 $owncloud->users()->create([
 'userid' => 'Frank',
@@ -34,8 +41,41 @@ $owncloud->users()->create([
 'email' => 'frank@example.org',
 ]);
 ```
-### Updating a User
 
+### Finding a User
 ```php
-$owncloud->users()->update('Frank','email','franksnewemail@example.org');
+$user = $owncloud->users()->find('user-id');
 ```
+
+### Update a User
+```php
+$owncloud->users()->update('user-id', 'email', 'new-email@example.com');
+```
+
+### Disable a User
+```php
+$owncloud->users()->disable('user-id');
+```
+
+### Enable a User
+```php
+$owncloud->users()->enable('user-id');
+```
+
+### Add a User to a Group
+```php
+$owncloud->users()->addGroup('user-id', 'group-name');
+```
+
+### Create a Group
+```php
+$owncloud->groups()->create('group-name');
+```
+
+### List Group
+```php
+$group = $owncloud->groups()->get();
+```
+
+For more information on the available methods, please refer to the code.
+
