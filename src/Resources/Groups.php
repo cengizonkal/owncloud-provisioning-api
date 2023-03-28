@@ -7,7 +7,7 @@ use Conkal\OwncloudProvisioningApi\Entities\Group;
 class Groups extends Resource
 {
 
-    private $endpoint = 'owncloud/ocs/v1.php/cloud/groups';
+    protected $endpoint = 'owncloud/ocs/v1.php/cloud/groups';
 
     public function add($groupId)
     {

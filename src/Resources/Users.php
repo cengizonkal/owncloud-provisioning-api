@@ -7,8 +7,8 @@ use Conkal\OwncloudProvisioningApi\Entities\User;
 
 class Users extends Resource
 {
-    private $endpoint = 'owncloud/ocs/v1.php/cloud/users';
 
+    protected $endpoint = 'owncloud/ocs/v1.php/cloud/users';
     public function find($id)
     {
         $response = $this->request('GET', $this->endpoint.'/'.$id);
@@ -59,11 +59,6 @@ class Users extends Resource
         $this->create($user, $password, $groups);
     }
 
-
-    public function setEndPoint($endpoint)
-    {
-        $this->endpoint = $endpoint;
-    }
 
     public function enable($user)
     {

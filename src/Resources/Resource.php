@@ -12,6 +12,7 @@ abstract class Resource
      * @var Owncloud
      */
     protected $client;
+    protected $endpoint;
 
     public function __construct(OwncloudClient $client)
     {
@@ -26,5 +27,10 @@ abstract class Resource
             throw new \Exception($response['ocs']['meta']['status'].' '.$response['ocs']['meta']['message']);
         }
         return $response;
+    }
+
+    public function setEndPoint($endpoint)
+    {
+        $this->endpoint = $endpoint;
     }
 }
