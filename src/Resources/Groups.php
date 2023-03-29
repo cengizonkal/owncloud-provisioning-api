@@ -20,7 +20,7 @@ class Groups extends Resource
             ]
         ]);
 
-        switch ($response['ocs']['meta']['statuscode']) {
+        switch ($response->meta->statusCode) {
             case 100:
                 return true;
             case 101:
@@ -45,7 +45,7 @@ class Groups extends Resource
         $group = new Group();
         $group->id = $groupId;
         $group->displayname = $groupId;
-        $group->users = $response['ocs']['data']['users'];
+        $group->users = $response->data['users'];
         return $group;
     }
 
@@ -56,7 +56,7 @@ class Groups extends Resource
         }
         $response = $this->request('GET', $this->endpoint);
         $groups = [];
-        foreach ($response['ocs']['data']['groups'] as $groupName) {
+        foreach ($response->data['groups'] as $groupName) {
             $group = new Group();
             $group->id = $groupName;
             $group->displayname = $groupName;
@@ -72,7 +72,7 @@ class Groups extends Resource
     {
         $response = $this->request('DELETE', $this->endpoint.'/'.$groupId);
 
-        switch ($response['ocs']['meta']['statuscode']) {
+        switch ($response->meta->statusCode) {
             case 100:
                 return true;
             case 101:

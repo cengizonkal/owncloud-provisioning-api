@@ -3,6 +3,7 @@
 namespace Conkal\OwncloudProvisioningApi\Resources;
 
 use Conkal\OwncloudProvisioningApi\Entities\User;
+use GuzzleHttp\Exception\GuzzleException;
 
 
 class Users extends Resource
@@ -15,7 +16,7 @@ class Users extends Resource
         $response = $this->request('GET', $this->endpoint.'/'.$id);
         $user = new User();
         $user->id = $id;
-        return $user->fill($response['ocs']['data']);
+        return $user->fill($response->data);
     }
 
     public function get()
@@ -26,7 +27,7 @@ class Users extends Resource
             $user->id = $username;
             $user->displayname = $username;
             return $user;
-        }, $response['ocs']['data']['users']);
+        }, $response->data['users']);
     }
 
     public function update($user, $key, $value)
@@ -74,7 +75,7 @@ class Users extends Resource
     public function groups($user)
     {
         $response = $this->request('GET', $this->endpoint.'/'.$user.'/groups');
-        return $response['ocs']['data']['groups'];
+        return $response->data['groups'];
     }
 
     public function addGroup($user, $group)
@@ -88,13 +89,33 @@ class Users extends Resource
     }
 
 
+    /**
+     * @throws \Exception
+     */
     public function removeGroup($user, $group)
     {
-        return $this->request('DELETE', $this->endpoint.'/'.$user.'/groups', [
+        $response = $this->request('DELETE', $this->endpoint.'/'.$user.'/groups', [
             'form_params' => [
                 'groupid' => $group,
                 'userid' => $user
             ]
         ]);
+
+        switch ($response->meta->statusCode) {
+            case 100:
+                return true;
+            case 101:
+                throw new \Exception('No group specified');
+            case 102:
+                throw new \Exception('Group does not exist');
+            case 103:
+                throw new \Exception('User does not exist');
+            case 104:
+                throw new \Exception('Insufficient privileges');
+            case 105:
+                throw new \Exception('Failed to remove user from group');
+            default:
+                throw new \Exception('Unknown error');
+        }
     }
 }

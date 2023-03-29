@@ -2,6 +2,7 @@
 
 namespace Conkal\OwncloudProvisioningApi\Resources;
 
+use Conkal\OwncloudProvisioningApi\OCSResponse;
 use Conkal\OwncloudProvisioningApi\Owncloud;
 use Conkal\OwncloudProvisioningApi\OwncloudClient;
 
@@ -19,10 +20,21 @@ abstract class Resource
         $this->client = $client;
     }
 
+    /**
+     * @param $method
+     * @param $uri
+     * @param  array  $options
+     * @return OCSResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
     public function request($method, $uri, array $options = [])
     {
         $response = $this->client->request($method, $uri, $options);
-        return json_decode($response->getBody()->getContents(), true);
+        $response = json_decode($response->getBody()->getContents(), true);
+
+        return new OCSResponse($response);
+
+
     }
 
     public function setEndPoint($endpoint)
