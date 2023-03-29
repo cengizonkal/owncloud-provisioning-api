@@ -9,6 +9,7 @@ class Users extends Resource
 {
 
     protected $endpoint = 'owncloud/ocs/v1.php/cloud/users';
+
     public function find($id)
     {
         $response = $this->request('GET', $this->endpoint.'/'.$id);
@@ -87,4 +88,13 @@ class Users extends Resource
     }
 
 
+    public function removeGroup($user, $group)
+    {
+        return $this->request('DELETE', $this->endpoint.'/'.$user.'/groups', [
+            'form_params' => [
+                'groupid' => $group,
+                'userid' => $user
+            ]
+        ]);
+    }
 }

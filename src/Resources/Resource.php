@@ -22,11 +22,7 @@ abstract class Resource
     public function request($method, $uri, array $options = [])
     {
         $response = $this->client->request($method, $uri, $options);
-        $response = json_decode($response->getBody()->getContents(), true);
-        if ($response['ocs']['meta']['statuscode'] != 100) {
-            throw new \Exception($response['ocs']['meta']['status'].' '.$response['ocs']['meta']['message']);
-        }
-        return $response;
+        return json_decode($response->getBody()->getContents(), true);
     }
 
     public function setEndPoint($endpoint)

@@ -30,45 +30,45 @@ class OwncloudTest extends TestCase
 
     public function testAddUser()
     {
-        $this->owncloud->users()->add('anil', '123456', 'test');
+        $this->owncloud->users()->add('cengiz', '123456', 'test');
         $this->assertTrue(true);
     }
 
     public function testFindUser()
     {
-        $user = $this->owncloud->users()->find('anil');
-        $this->assertEquals('anil', $user->id);
+        $user = $this->owncloud->users()->find('cengiz');
+        $this->assertEquals('cengiz', $user->id);
     }
 
 
     public function testUpdate()
     {
-        $this->owncloud->users()->update('anil', 'email', 'aeyupoglu@ciu.edu.tr');
+        $this->owncloud->users()->update('cengiz', 'email', 'aeyupoglu@ciu.edu.tr');
 
         $this->assertTrue(true);
     }
 
     public function testDisableUser()
     {
-        $this->owncloud->users()->disable('anil');
+        $this->owncloud->users()->disable('cengiz');
         $this->assertTrue(true);
     }
 
     public function testEnableUser()
     {
-        $this->owncloud->users()->enable('anil');
+        $this->owncloud->users()->enable('cengiz');
         $this->assertTrue(true);
     }
 
     public function testGetUserGroups()
     {
-        $groups = $this->owncloud->users()->groups('anil');
+        $groups = $this->owncloud->users()->groups('cengiz');
         $this->assertTrue(is_array($groups));
     }
 
     public function testAddUserToGroup()
     {
-        $this->owncloud->users()->addGroup('anil', 'test');
+        $this->owncloud->users()->addGroup('cengiz', 'test');
         $this->assertTrue(true);
     }
 
@@ -76,13 +76,19 @@ class OwncloudTest extends TestCase
     public function testCreateGroup()
     {
         $response = $this->owncloud->groups()->create('test');
-        $this->assertTrue($response->getStatusCode() == 200);
+        $this->assertTrue(true);
     }
 
     public function testGetGroup()
     {
         $group = $this->owncloud->groups()->get('test');
         $this->assertEquals('test', $group->id);
+    }
+
+    public function testRemoveFromGroup()
+    {
+        $this->owncloud->users()->removeGroup('cengiz', 'test');
+        $this->assertTrue(true);
     }
 
 

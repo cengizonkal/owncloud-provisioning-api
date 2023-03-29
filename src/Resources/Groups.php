@@ -9,13 +9,29 @@ class Groups extends Resource
 
     protected $endpoint = 'owncloud/ocs/v1.php/cloud/groups';
 
+    /**
+     * @throws \Exception
+     */
     public function add($groupId)
     {
-        return $this->request('POST', $this->endpoint, [
+        $response = $this->request('POST', $this->endpoint, [
             'form_params' => [
                 'groupid' => $groupId
             ]
         ]);
+
+        switch ($response['ocs']['meta']['statuscode']) {
+            case 100:
+                return true;
+            case 101:
+                throw new \Exception('Invalid input data');
+            case 102:
+                throw new \Exception('Group already exists');
+            case 103:
+                throw new \Exception('Failed to add the group');
+            default:
+                throw new \Exception('Unknown error');
+        }
     }
 
     public function create($groupId)
@@ -49,9 +65,29 @@ class Groups extends Resource
         return $groups;
     }
 
+    /**
+     * @throws \Exception
+     */
     public function delete($groupId)
     {
-        return $this->request('DELETE', $this->endpoint.'/'.$groupId);
+        $response = $this->request('DELETE', $this->endpoint.'/'.$groupId);
+
+        switch ($response['ocs']['meta']['statuscode']) {
+            case 100:
+                return true;
+            case 101:
+                throw new \Exception('No group specified');
+            case 102:
+                throw new \Exception('Group does not exist');
+            case 103:
+                throw new \Exception('User does not exist');
+            case 104:
+                throw new \Exception('Insufficient privileges');
+            case 105:
+                throw new \Exception('Failed to remove user from group');
+            default:
+                throw new \Exception('Unknown error');
+        }
     }
 
 

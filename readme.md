@@ -67,6 +67,11 @@ $owncloud->users()->enable('user-id');
 $owncloud->users()->addGroup('user-id', 'group-name');
 ```
 
+### Remove a User from a Group
+```php
+$owncloud->users()->removeGroup('user-id', 'group-name');
+```
+
 ### Create a Group
 ```php
 $owncloud->groups()->create('group-name');
