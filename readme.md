@@ -64,12 +64,12 @@ $owncloud->users()->enable('user-id');
 
 ### Add a User to a Group
 ```php
-$owncloud->users()->addGroup('user-id', 'group-name');
+$owncloud->users()->addToGroup('user-id', 'group-name');
 ```
 
 ### Remove a User from a Group
 ```php
-$owncloud->users()->removeGroup('user-id', 'group-name');
+$owncloud->users()->removeFromGroup('user-id', 'group-name');
 ```
 
 ### Create a Group

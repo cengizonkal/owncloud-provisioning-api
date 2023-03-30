@@ -31,10 +31,7 @@ abstract class Resource
     {
         $response = $this->client->request($method, $uri, $options);
         $response = json_decode($response->getBody()->getContents(), true);
-
         return new OCSResponse($response);
-
-
     }
 
     public function setEndPoint($endpoint)

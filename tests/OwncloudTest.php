@@ -22,6 +22,12 @@ class OwncloudTest extends TestCase
         );
     }
 
+    public function testCreateGroup()
+    {
+        $response = $this->owncloud->groups()->create('test');
+        $this->assertTrue(true);
+    }
+
     public function testUsers()
     {
         $users = $this->owncloud->users()->get();
@@ -30,7 +36,7 @@ class OwncloudTest extends TestCase
 
     public function testAddUser()
     {
-        $this->owncloud->users()->add('cengiz', '123456', 'test');
+        $this->owncloud->users()->add('cengiz', '123456', ['test']);
         $this->assertTrue(true);
     }
 
@@ -66,16 +72,10 @@ class OwncloudTest extends TestCase
         $this->assertTrue(is_array($groups));
     }
 
+
     public function testAddUserToGroup()
     {
-        $this->owncloud->users()->addGroup('cengiz', 'test');
-        $this->assertTrue(true);
-    }
-
-
-    public function testCreateGroup()
-    {
-        $response = $this->owncloud->groups()->create('test');
+        $this->owncloud->users()->addToGroup('cengiz', 'test');
         $this->assertTrue(true);
     }
 
@@ -87,7 +87,19 @@ class OwncloudTest extends TestCase
 
     public function testRemoveFromGroup()
     {
-        $this->owncloud->users()->removeGroup('cengiz', 'test');
+        $this->owncloud->users()->removeFromGroup('cengiz', 'test');
+        $this->assertTrue(true);
+    }
+
+    public function testDeleteUser()
+    {
+        $this->owncloud->users()->delete('cengiz');
+        $this->assertTrue(true);
+    }
+
+    public function testDeleteGroup()
+    {
+        $this->owncloud->groups()->delete('test');
         $this->assertTrue(true);
     }
 

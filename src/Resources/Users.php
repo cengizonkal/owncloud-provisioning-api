@@ -3,8 +3,13 @@
 namespace Conkal\OwncloudProvisioningApi\Resources;
 
 use Conkal\OwncloudProvisioningApi\Entities\User;
-use GuzzleHttp\Exception\GuzzleException;
-
+use Conkal\OwncloudProvisioningApi\Exceptions\GroupDoesNotExistsException;
+use Conkal\OwncloudProvisioningApi\Exceptions\InsufficientPrivilegesException;
+use Conkal\OwncloudProvisioningApi\Exceptions\InvalidInputDataException;
+use Conkal\OwncloudProvisioningApi\Exceptions\NoGroupSpecifiedException;
+use Conkal\OwncloudProvisioningApi\Exceptions\UnknownErrorException;
+use Conkal\OwncloudProvisioningApi\Exceptions\UserDoesNotExistsException;
+use Conkal\OwncloudProvisioningApi\Exceptions\UsernameAlreadyExistsException;
 
 class Users extends Resource
 {
@@ -32,28 +37,55 @@ class Users extends Resource
 
     public function update($user, $key, $value)
     {
-        return $this->request('PUT', $this->endpoint.'/'.$user, [
+        $response = $this->request('PUT', $this->endpoint.'/'.$user, [
             'form_params' => [
                 'key' => $key,
                 'value' => $value
             ]
         ]);
+        switch ($response->meta->statusCode) {
+            case 100:
+                return true;
+            case 101:
+                throw new UserDoesNotExistsException($user);
+            case 102:
+                throw new InvalidInputDataException();
+            default:
+                throw new UnknownErrorException('Unknown error');
+        }
     }
 
-    public function create($user, $password, $groups)
+    public function create($user, $password, array $groups)
     {
-        $this->request('POST', $this->endpoint, [
+        $response = $this->request('POST', $this->endpoint, [
             'form_params' => [
                 'userid' => $user,
                 'password' => $password,
                 'groups' => $groups
             ]
         ]);
+        switch ($response->meta->statusCode) {
+            case 100:
+                return true;
+            case 101:
+                throw new InvalidInputDataException();
+            case 102:
+                throw new UsernameAlreadyExistsException($user);
+            case 103:
+                throw new UnknownErrorException('Unknown error occurred whilst adding the user');
+            case 104:
+                throw new GroupDoesNotExistsException(implode(', ', $groups));
+            default:
+                throw new UnknownErrorException('Unknown error');
+        }
     }
 
     public function delete($user)
     {
-        $this->request('DELETE', $this->endpoint.'/'.$user);
+        $response = $this->request('DELETE', $this->endpoint.'/'.$user);
+        if ($response->meta->statusCode != 100) {
+            throw new UnknownErrorException('Unknown error occurred whilst deleting the user');
+        }
     }
 
     public function add($user, $password, $groups)
@@ -64,35 +96,62 @@ class Users extends Resource
 
     public function enable($user)
     {
-        $this->request('PUT', $this->endpoint.'/'.$user.'/enable');
+        $response = $this->request('PUT', $this->endpoint.'/'.$user.'/enable');
+        if ($response->meta->statusCode != 100) {
+            throw new UnknownErrorException('Unknown error');
+        }
+        return true;
     }
 
     public function disable($user)
     {
-        $this->request('PUT', $this->endpoint.'/'.$user.'/disable');
+        $response = $this->request('PUT', $this->endpoint.'/'.$user.'/disable');
+        if ($response->meta->statusCode != 100) {
+            throw new UnknownErrorException('Unknown error');
+        }
+        return true;
     }
 
     public function groups($user)
     {
         $response = $this->request('GET', $this->endpoint.'/'.$user.'/groups');
+        if ($response->meta->statusCode != 100) {
+            throw new UnknownErrorException('Unknown error');
+        }
         return $response->data['groups'];
     }
 
-    public function addGroup($user, $group)
+    public function addToGroup($user, $group)
     {
-        return $this->request('POST', $this->endpoint.'/'.$user.'/groups', [
+        $response = $this->request('POST', $this->endpoint.'/'.$user.'/groups', [
             'form_params' => [
                 'groupid' => $group,
                 'userid' => $user
             ]
         ]);
+        switch ($response->meta->statusCode) {
+            case 100:
+                return true;
+            case 101:
+                throw new NoGroupSpecifiedException();
+            case 102:
+                throw new GroupDoesNotExistsException($group);
+            case 103:
+                throw new UserDoesNotExistsException($user);
+            case 104:
+                throw new InsufficientPrivilegesException();
+            case 105:
+                throw new UnknownErrorException('Failed to add user to group');
+            default:
+                throw new UnknownErrorException('Unknown error');
+        }
     }
 
 
     /**
      * @throws \Exception
      */
-    public function removeGroup($user, $group)
+    public function removeFromGroup($user, $group)
     {
         $response = $this->request('DELETE', $this->endpoint.'/'.$user.'/groups', [
             'form_params' => [
@@ -117,5 +176,10 @@ class Users extends Resource
             default:
                 throw new \Exception('Unknown error');
         }
+    }
+
+    public function edit($user, $key, $value)
+    {
+        $this->update($user, $key, $value);
     }
 }

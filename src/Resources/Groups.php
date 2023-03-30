@@ -3,6 +3,11 @@
 namespace Conkal\OwncloudProvisioningApi\Resources;
 
 use Conkal\OwncloudProvisioningApi\Entities\Group;
+use Conkal\OwncloudProvisioningApi\Exceptions\GroupAlreadyExistsException;
+use Conkal\OwncloudProvisioningApi\Exceptions\GroupDoesNotExistsException;
+use Conkal\OwncloudProvisioningApi\Exceptions\InvalidInputDataException;
+use Conkal\OwncloudProvisioningApi\Exceptions\UnknownErrorException;
+
 
 class Groups extends Resource
 {
@@ -24,13 +29,13 @@ class Groups extends Resource
             case 100:
                 return true;
             case 101:
-                throw new \Exception('Invalid input data');
+                throw new InvalidInputDataException();
             case 102:
-                throw new \Exception('Group already exists');
+                throw new GroupAlreadyExistsException($groupId);
             case 103:
-                throw new \Exception('Failed to add the group');
+                throw new UnknownErrorException('Failed to add the group');
             default:
-                throw new \Exception('Unknown error');
+                throw new UnknownErrorException('Unknown error');
         }
     }
 
@@ -42,6 +47,10 @@ class Groups extends Resource
     private function find($groupId)
     {
         $response = $this->request('GET', $this->endpoint.'/'.$groupId);
+        if ($response->meta->statusCode != 100) {
+            throw new UnknownErrorException('Unknown error');
+        }
+
         $group = new Group();
         $group->id = $groupId;
         $group->displayname = $groupId;
@@ -55,6 +64,9 @@ class Groups extends Resource
             return $this->find($groupId);
         }
         $response = $this->request('GET', $this->endpoint);
+        if ($response->meta->statusCode != 100) {
+            throw new UnknownErrorException('Unknown error');
+        }
         $groups = [];
         foreach ($response->data['groups'] as $groupName) {
             $group = new Group();
@@ -65,9 +77,7 @@ class Groups extends Resource
         return $groups;
     }
 
-    /**
-     * @throws \Exception
-     */
+
     public function delete($groupId)
     {
         $response = $this->request('DELETE', $this->endpoint.'/'.$groupId);
@@ -76,17 +86,9 @@ class Groups extends Resource
             case 100:
                 return true;
             case 101:
-                throw new \Exception('No group specified');
-            case 102:
-                throw new \Exception('Group does not exist');
-            case 103:
-                throw new \Exception('User does not exist');
-            case 104:
-                throw new \Exception('Insufficient privileges');
-            case 105:
-                throw new \Exception('Failed to remove user from group');
+                throw new GroupDoesNotExistsException($groupId);
             default:
-                throw new \Exception('Unknown error');
+                throw new UnknownErrorException('Failed to delete the group');
         }
     }
 
