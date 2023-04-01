@@ -18,7 +18,7 @@ class Users extends Resource
 
     public function find($id)
     {
-        $response = $this->request('GET', $this->endpoint.'/'.$id);
+        $response = $this->request('GET', $this->endpoint . '/' . $id);
         $user = new User();
         $user->id = $id;
         return $user->fill($response->data);
@@ -37,7 +37,7 @@ class Users extends Resource
 
     public function update($user, $key, $value)
     {
-        $response = $this->request('PUT', $this->endpoint.'/'.$user, [
+        $response = $this->request('PUT', $this->endpoint . '/' . $user, [
             'form_params' => [
                 'key' => $key,
                 'value' => $value
@@ -82,21 +82,22 @@ class Users extends Resource
 
     public function delete($user)
     {
-        $response = $this->request('DELETE', $this->endpoint.'/'.$user);
+        $response = $this->request('DELETE', $this->endpoint . '/' . $user);
         if ($response->meta->statusCode != 100) {
             throw new UnknownErrorException('Unknown error occurred whilst deleting the user');
         }
+        return true;
     }
 
     public function add($user, $password, $groups)
     {
-        $this->create($user, $password, $groups);
+        return $this->create($user, $password, $groups);
     }
 
 
     public function enable($user)
     {
-        $response = $this->request('PUT', $this->endpoint.'/'.$user.'/enable');
+        $response = $this->request('PUT', $this->endpoint . '/' . $user . '/enable');
         if ($response->meta->statusCode != 100) {
             throw new UnknownErrorException('Unknown error');
         }
@@ -105,7 +106,7 @@ class Users extends Resource
 
     public function disable($user)
     {
-        $response = $this->request('PUT', $this->endpoint.'/'.$user.'/disable');
+        $response = $this->request('PUT', $this->endpoint . '/' . $user . '/disable');
         if ($response->meta->statusCode != 100) {
             throw new UnknownErrorException('Unknown error');
         }
@@ -114,7 +115,7 @@ class Users extends Resource
 
     public function groups($user)
     {
-        $response = $this->request('GET', $this->endpoint.'/'.$user.'/groups');
+        $response = $this->request('GET', $this->endpoint . '/' . $user . '/groups');
         if ($response->meta->statusCode != 100) {
             throw new UnknownErrorException('Unknown error');
         }
@@ -123,7 +124,7 @@ class Users extends Resource
 
     public function addToGroup($user, $group)
     {
-        $response = $this->request('POST', $this->endpoint.'/'.$user.'/groups', [
+        $response = $this->request('POST', $this->endpoint . '/' . $user . '/groups', [
             'form_params' => [
                 'groupid' => $group,
                 'userid' => $user
@@ -153,7 +154,7 @@ class Users extends Resource
      */
     public function removeFromGroup($user, $group)
     {
-        $response = $this->request('DELETE', $this->endpoint.'/'.$user.'/groups', [
+        $response = $this->request('DELETE', $this->endpoint . '/' . $user . '/groups', [
             'form_params' => [
                 'groupid' => $group,
                 'userid' => $user
@@ -180,6 +181,6 @@ class Users extends Resource
 
     public function edit($user, $key, $value)
     {
-        $this->update($user, $key, $value);
+        return $this->update($user, $key, $value);
     }
 }
