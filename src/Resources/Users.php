@@ -19,6 +19,9 @@ class Users extends Resource
     public function find($id)
     {
         $response = $this->request('GET', $this->endpoint.'/'.$id);
+        if ($response->meta->statusCode != 100) {
+            throw new UserDoesNotExistsException($id);
+        }
         $user = new User();
         $user->id = $id;
         return $user->fill($response->data);
@@ -27,6 +30,9 @@ class Users extends Resource
     public function get()
     {
         $response = $this->request('GET', $this->endpoint);
+        if ($response->meta->statusCode != 100) {
+            throw new UnknownErrorException('Unknown error');
+        }
         return array_map(function ($username) {
             $user = new User();
             $user->id = $username;
