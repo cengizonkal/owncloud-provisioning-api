@@ -91,16 +91,36 @@ class OwncloudTest extends TestCase
         $this->assertTrue(true);
     }
 
+    public function testUserExists()
+    {
+        $this->assertTrue($this->owncloud->users()->exists('cengiz'));
+    }
+
     public function testDeleteUser()
     {
         $this->owncloud->users()->delete('cengiz');
         $this->assertTrue(true);
     }
 
+    public function testUserDoesNotExists()
+    {
+        $this->assertFalse($this->owncloud->users()->exists('cengiz'));
+    }
+
+    public function testGroupExists()
+    {
+        $this->assertTrue($this->owncloud->groups()->exists('test'));
+    }
+
     public function testDeleteGroup()
     {
         $this->owncloud->groups()->delete('test');
         $this->assertTrue(true);
+    }
+
+    public function testGroupDoesNotExists()
+    {
+        $this->assertFalse($this->owncloud->groups()->exists('test'));
     }
 
 
