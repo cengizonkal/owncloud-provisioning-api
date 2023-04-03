@@ -48,7 +48,7 @@ class Groups extends Resource
     {
         $response = $this->request('GET', $this->endpoint.'/'.$groupId);
         if ($response->meta->statusCode != 100) {
-            throw new UnknownErrorException('Unknown error');
+            throw new GroupDoesNotExistsException($groupId);
         }
 
         $group = new Group();
@@ -89,6 +89,16 @@ class Groups extends Resource
                 throw new GroupDoesNotExistsException($groupId);
             default:
                 throw new UnknownErrorException('Failed to delete the group');
+        }
+    }
+
+    public function exists($group)
+    {
+        try {
+            $this->find($group);
+            return true;
+        } catch (GroupDoesNotExistsException $e) {
+            return false;
         }
     }
 
