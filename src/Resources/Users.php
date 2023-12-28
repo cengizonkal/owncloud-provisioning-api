@@ -14,7 +14,7 @@ use Conkal\OwncloudProvisioningApi\Exceptions\UsernameAlreadyExistsException;
 class Users extends Resource
 {
 
-    protected $endpoint = 'owncloud/ocs/v1.php/cloud/users';
+    protected $endpoint = 'ocs/v1.php/cloud/users';
 
     public function find($id)
     {

@@ -12,7 +12,7 @@ use Conkal\OwncloudProvisioningApi\Exceptions\UnknownErrorException;
 class Groups extends Resource
 {
 
-    protected $endpoint = 'owncloud/ocs/v1.php/cloud/groups';
+    protected $endpoint = 'ocs/v1.php/cloud/groups';
 
     /**
      * @throws \Exception
